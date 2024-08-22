@@ -2,6 +2,20 @@ import mongoose ,{Schema} from 'mongoose'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
 
+
+const cartItemSchema = new mongoose.Schema({
+   product: {
+     type: mongoose.Schema.Types.ObjectId,
+     ref: 'Product',
+     required: true,
+   },
+   quantity: {
+     type: Number,
+     required: true,
+     default: 1,
+   },
+ });
+
 const userSchema=new Schema({
            email:{
             type:String,
@@ -20,7 +34,8 @@ const userSchema=new Schema({
             isAdmin:{
                 type:Boolean,
                 default:false
-            }         
+            },
+            cart: [cartItemSchema],      
 },{timestamps:true})
 
 
