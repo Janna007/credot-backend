@@ -22,11 +22,12 @@ app.use(express.static("public"))
 app.use(cookieParser())
 
 import userRouter from './routes/userRoutes.js'
-
+import productRouter from './routes/productRoutes.js'
 
 
 
 app.use("/api/v1/users",userRouter)
+app.use("/api/v1/products",productRouter)
 
 
 
