@@ -9,9 +9,9 @@ const app= express()
 //configuration
 
 app.use(cors({
-    origin:process.env.CORS_ORIGIN,
-    credentials:true
-}))
+    origin: 'http://localhost:5173', // Specify the exact origin of your frontend
+    credentials: true // Allow cookies and other credentials
+  }));
 
 
 //4 major configurations 
