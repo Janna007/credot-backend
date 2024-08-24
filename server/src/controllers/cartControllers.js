@@ -1,4 +1,4 @@
-import { Product } from "../models/product.model.js"
+import { Product }  from "../models/product.model.js"
 import { asyncHandler } from "../utils/AsyncHandler.js"
 import {ApiError} from '../utils/ApiError.js'
 import {ApiResponse} from '../utils/ApiResponse.js'
@@ -53,50 +53,45 @@ const addToCart=asyncHandler(async(req,res,next)=>{
 
 const updateCartItem = asyncHandler(async (req, res, next) => {
   const userId = req.user._id;
-  const { productId, quantity } = req.body;
+  const { products } = req.body;
 
-  if (!mongoose.Types.ObjectId.isValid(productId)) {
-    throw new ApiError(400, 'Invalid product ID');
-  }
+  
 
-  if (quantity <= 0) {
-    throw new ApiError(400, 'Quantity must be greater than zero');
-  }
+    // Find the user by userId
+    const user = await User.findById(userId);
 
-  const user = await User.findById(userId);
-  if (!user) {
-    throw new ApiError(404, 'User not found');
-  }
+    if (!user) {
+     throw new ApiError(404,"User not found")
+    }
 
-  const cartItemIndex = user.cart.findIndex(item => item.product.toString() === productId);
+    // Update the user's cart
+    user.cart = products.map(item => ({
+      product: item.product,
+      quantity: item.quantity,
+    }));
 
-  if (cartItemIndex === -1) {
-    throw new ApiError(404, 'Product not found in cart');
-  }
+    // Save the updated user document
+    await user.save();
 
-  user.cart[cartItemIndex].quantity = quantity;
 
-  await user.save();
-
-  return res.status(200).json(new ApiResponse(200, user.cart, 'Cart updated successfully'));
+      return res.status(200).json(new ApiResponse(200, user.cart, 'Cart updated successfully'));
 });
 
 //remove from cart
 
 const removeFromCart = asyncHandler(async (req, res, next) => {
   const userId = req.user._id;
-  const { productId } = req.body;
+  const { id } = req.params;
 
-  if (!mongoose.Types.ObjectId.isValid(productId)) {
-    throw new ApiError(400, 'Invalid product ID');
-  }
+  
 
   const user = await User.findById(userId);
   if (!user) {
     throw new ApiError(404, 'User not found');
   }
 
-  user.cart = user.cart.filter(item => item.product.toString() !== productId);
+  user.cart = user.cart.filter(item => item.product.toString() !== id);
+  
 
   await user.save();
 

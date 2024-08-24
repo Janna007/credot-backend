@@ -12,7 +12,7 @@ router.use(verifyJWT)
 
 router.route("/add").post(addToCart)
 router.route("/update").put(updateCartItem)
-router.route("/delete").delete(removeFromCart)
+router.route("/delete/:id").delete(removeFromCart)
 router.route("/getcartitems").get(getCartItems)
 
 
