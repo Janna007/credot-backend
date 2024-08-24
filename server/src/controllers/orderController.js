@@ -3,6 +3,7 @@ import { asyncHandler } from "../utils/AsyncHandler.js"
 import {ApiError} from '../utils/ApiError.js'
 import {ApiResponse} from '../utils/ApiResponse.js'
 import { Order } from "../models/order.model.js"
+import { User } from "../models/user.model.js"
 
 // get all orders(get) ---admin
 
@@ -27,6 +28,15 @@ const createOrder=asyncHandler(async(req,res,next)=>{
   if(!savedOrder){
     throw new ApiError(500,"Something Went wrong!!!")
   }
+
+  const user = await User.findById(req.user._id);
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+ 
+  user.cart = [];
+  await user.save();
 
 
   res.status(201).json(
