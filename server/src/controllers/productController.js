@@ -3,6 +3,8 @@ import { Product } from "../models/product.model.js"
 import { asyncHandler } from "../utils/AsyncHandler.js"
 import {ApiError} from '../utils/ApiError.js'
 import {ApiResponse} from '../utils/ApiResponse.js'
+import { User } from "../models/user.model.js"
+import { Order } from "../models/order.model.js"
 //create product--admin
 
 const createProduct=asyncHandler(async(req,res,next)=>{
@@ -119,6 +121,17 @@ const deleteProduct=asyncHandler(async(req,res,next)=>{
 
     await Product.findByIdAndDelete(product._id)
 
+    await User.updateMany(
+      { 'cart.product': id },
+      { $pull: { cart: { product: id } } }
+    );
+  
+    // 5. Remove the product from all orders
+    await Order.updateMany(
+      { 'products.product': id },
+      { $pull: { products: { product: id } } }
+    );
+  
 
    return res.status(200).json(
      new ApiResponse(200, null, "Product deleted successfully")
