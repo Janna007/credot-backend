@@ -7,6 +7,20 @@ import { User } from "../models/user.model.js"
 
 // get all orders(get) ---admin
 
+const getAllOrders=asyncHandler(async(req,res)=>{
+      
+  const orders = await Order.find().populate("user").populate("products.product")
+  
+     
+  if (!orders) {
+      throw new ApiError(404, 'No orders found');
+  }
+
+ 
+  return res.status(200).json(
+      new ApiResponse(200, orders, 'Orders retrieved successfully')
+  );
+})
 
 //place order(post)
 
@@ -86,6 +100,7 @@ const getOrderById = asyncHandler(async (req, res, next) => {
 const updateOrderStatus = asyncHandler(async (req, res, next) => {
     const { id } = req.params;
     const { status } = req.body;
+    console.log(id,status)
   
   
     if (!status || !['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'].includes(status)) {
@@ -101,6 +116,7 @@ const updateOrderStatus = asyncHandler(async (req, res, next) => {
     order.status = status;
   
     const updatedOrder = await order.save();
+    console.log(updatedOrder)
   
     res.status(200).json(
       new ApiResponse(200, updatedOrder, "Order status updated successfully")
@@ -108,4 +124,4 @@ const updateOrderStatus = asyncHandler(async (req, res, next) => {
   });
   
 
-export {createOrder,getUserOrders,getOrderById,updateOrderStatus}
+export {createOrder,getUserOrders,getOrderById,updateOrderStatus,getAllOrders}
