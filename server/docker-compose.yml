@@ -11,7 +11,7 @@ services:
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
-    command: npm start
+    command: npm dev
     ports:
       - '8000:8000'
     depends_on:
