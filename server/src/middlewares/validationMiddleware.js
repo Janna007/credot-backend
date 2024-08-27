@@ -2,7 +2,7 @@ import { registerSchema} from '../schemas/authSchemas.js'
 import { createOrderSchema } from '../schemas/orderSchemas.js';
 import { ApiError } from '../utils/ApiError.js';
 import { createProductSchema,updateProductSchema } from '../schemas/productSchemas.js';
-import { asyncHandler } from '../utils/AsyncHandler.js';
+import { asyncHandler } from '../utils/asyncHandler.js';
 
 
 export const validateRegister= asyncHandler(
