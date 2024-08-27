@@ -9,7 +9,7 @@ const app= express()
 //configuration
 
 app.use(cors({
-    origin: 'http://localhost:5173', // Specify the exact origin of your frontend
+    origin: 'https://credot.vercel.app/', // Specify the exact origin of your frontend
     credentials: true // Allow cookies and other credentials
   }));
 
